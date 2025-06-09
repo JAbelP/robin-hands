@@ -56,7 +56,7 @@ function TimerComponent() {
             type="text"
             value={inputTimeStr}
             onChange={(e) => setInputTimeStr(e.target.value)}
-            className="border rounded p-2 w-full"
+            className="border rounded p-2 w-full text-black"
             placeholder="HHMMSS"
           />
         </div>
