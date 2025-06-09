@@ -51,7 +51,7 @@ function TimerComponent() {
       </div>
       {showSettings && (
         <div className="mb-4">
-          <label className="block text-left mb-1 font-medium">Enter time as HHMMSS (e.g., 013000 = 1 hr 30 min):</label>
+          <label className="block text-black text-left mb-1 font-medium">Enter time as HHMMSS (e.g., 013000 = 1 hr 30 min):</label>
           <input
             type="text"
             value={inputTimeStr}
