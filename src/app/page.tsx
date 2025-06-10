@@ -1,6 +1,6 @@
 "use client"
 import { useState, useEffect, ChangeEvent } from 'react';
-import { Settings, Pause, Play, RotateCcw } from 'lucide-react';
+import { Settings, Pause, Play, RotateCcw, Trash2 } from 'lucide-react';
 
 export default function TimerAndChance() {
   return (
@@ -44,6 +44,15 @@ function TimerComponent() {
     return `${hours}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
   };
 
+  // Update document title with time left
+  useEffect(() => {
+    document.title = formatTime(timeLeft);
+    return () => {
+      // Optionally reset title on unmount
+      document.title = "Timer";
+    };
+  }, [timeLeft]);
+
   return (
     <div className="relative w-full max-w-md mx-auto text-center border p-4 rounded-2xl shadow-lg">
       <div className="absolute top-2 right-2 cursor-pointer" onClick={() => setShowSettings(!showSettings)}>
@@ -80,6 +89,7 @@ function ChanceComponent(): JSX.Element {
   const [result, setResult] = useState<string | null>(null);
   const [newChoice, setNewChoice] = useState<string>('');
   const [newChance, setNewChance] = useState<string>('');
+  const [showSettings, setShowSettings] = useState<boolean>(false);
 
   const spin = (): void => {
     const total = choices.reduce((sum, c) => sum + c.chance, 0);
@@ -109,16 +119,40 @@ function ChanceComponent(): JSX.Element {
     }
   };
 
+  const deleteChoice = (idx: number) => {
+    setChoices(choices => choices.filter((_, i) => i !== idx));
+  };
+
   return (
-    <div className="w-full max-w-md mx-auto text-center border p-4 rounded-2xl shadow-lg">
+    <div className="w-full max-w-md mx-auto text-center border p-4 rounded-2xl shadow-lg relative">
+      <div
+        className="absolute top-2 right-2 cursor-pointer"
+        onClick={() => setShowSettings(s => !s)}
+        title="Settings"
+      >
+        <Settings />
+      </div>
       <h2 className="text-xl font-bold mb-4">Chance Spinner</h2>
-      <div className="mb-2">{result ? <p className="text-2xl font-semibold">Result: {result}</p> : 'Click Spin to try your luck!'}</div>
+      <div className="mb-2">
+        {result ? <p className="text-2xl font-semibold">Result: {result}</p> : 'Click Spin to try your luck!'}
+      </div>
       <button onClick={spin} className="bg-green-500 text-white px-4 py-2 rounded mb-4">Spin</button>
       <div className="space-y-2">
         {choices.map((choice, idx) => (
           <div key={idx} className="flex justify-between items-center text-left">
             <span>{choice.name}</span>
-            <span>{choice.chance}%</span>
+            <span className="flex items-center gap-2">
+              {choice.chance}%
+              {showSettings && (
+                <button
+                  onClick={() => deleteChoice(idx)}
+                  className="ml-2 text-red-500 hover:text-red-700"
+                  title="Delete"
+                >
+                  <Trash2 size={18} />
+                </button>
+              )}
+            </span>
           </div>
         ))}
       </div>
@@ -127,14 +161,14 @@ function ChanceComponent(): JSX.Element {
           value={newChoice}
           onChange={(e: ChangeEvent<HTMLInputElement>) => setNewChoice(e.target.value)}
           placeholder="Choice name"
-          className="border p-2 rounded w-1/2"
+          className="border p-2 rounded w-1/2 text-black"
         />
         <input
           value={newChance}
           onChange={(e: ChangeEvent<HTMLInputElement>) => setNewChance(e.target.value)}
           placeholder="% Chance"
           type="number"
-          className="border p-2 rounded w-1/2"
+          className="border p-2 rounded w-1/2 text-black"
         />
       </div>
       <button onClick={addChoice} className="mt-2 bg-blue-500 text-white px-4 py-1 rounded">Add Choice</button>
