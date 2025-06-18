@@ -1,12 +1,14 @@
 "use client"
 import { useState, useEffect, ChangeEvent } from 'react';
 import { Settings, Pause, Play, RotateCcw, Trash2 } from 'lucide-react';
+import Image from 'next/image';
 
 export default function TimerAndChance() {
   return (
     <div className="p-4 space-y-10">
       <TimerComponent />
       <ChanceComponent />
+      <BingoComponent />
     </div>
   );
 }
@@ -172,6 +174,88 @@ function ChanceComponent(): JSX.Element {
         />
       </div>
       <button onClick={addChoice} className="mt-2 bg-blue-500 text-white px-4 py-1 rounded">Add Choice</button>
+    </div>
+  );
+}
+
+function BingoComponent(): JSX.Element {
+  const images = [
+    'clothes.png', 'cold.png', 'craft.png', 'cry.png', 'darkness.png',
+    'dirty.png', 'dishes.png', 'dive.png', 'fall.png', 'hands.png',
+    'happy.png', 'help.png', 'hot.png', 'midnight.png', 'rain.png',
+    'recycle.png', 'shiver.png', 'shower.png', 'sick.png', 'sleep.png',
+    'Sun.png', 'wash.png', 'wind.png', 'winter.png'
+  ];
+
+  const [currentImage, setCurrentImage] = useState<string | null>(null);
+  const [shownImages, setShownImages] = useState<string[]>([]);
+  const [availableImages, setAvailableImages] = useState<string[]>(images);
+
+  const selectRandomImage = () => {
+    if (availableImages.length === 0) return;
+    
+    const randomIndex = Math.floor(Math.random() * availableImages.length);
+    const selectedImage = availableImages[randomIndex];
+    
+    setCurrentImage(selectedImage);
+    setShownImages([...shownImages, selectedImage]);
+    setAvailableImages(availableImages.filter(img => img !== selectedImage));
+  };
+
+  const resetGame = () => {
+    setCurrentImage(null);
+    setShownImages([]);
+    setAvailableImages(images);
+  };
+
+  return (
+    <div className="w-full max-w-md mx-auto text-center border p-4 rounded-2xl shadow-lg">
+      <div className="mb-4">
+        <h2 className="text-2xl font-bold mb-4">BINGO Image Game</h2>
+        <div className="flex justify-center space-x-4 mb-4">
+          <button
+            onClick={selectRandomImage}
+            disabled={availableImages.length === 0}
+            className="px-4 py-2 bg-blue-500 text-white rounded-lg disabled:bg-gray-400"
+          >
+            BINGO!
+          </button>
+          <button
+            onClick={resetGame}
+            className="px-4 py-2 bg-red-500 text-white rounded-lg"
+          >
+            Reset
+          </button>
+        </div>
+        {currentImage && (
+          <div className="mb-4">
+            <Image
+              src={`/images/${currentImage}`}
+              alt="Current BINGO"
+              width={128}
+              height={128}
+              className="mx-auto object-contain"
+            />
+          </div>
+        )}
+      </div>
+      <div>
+        <h3 className="font-bold mb-2">Shown Images:</h3>
+        <div className="grid grid-cols-3 gap-2">
+          {shownImages.map((img, index) => (
+            <div key={index} className="flex flex-col items-center">
+              <Image
+                src={`/images/${img}`}
+                alt={`Shown ${index + 1}`}
+                width={64}
+                height={64}
+                className="object-contain"
+              />
+              <span className="text-sm">{img.replace('.png', '')}</span>
+            </div>
+          ))}
+        </div>
+      </div>
     </div>
   );
 }
