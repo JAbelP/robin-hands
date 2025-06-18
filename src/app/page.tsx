@@ -211,14 +211,14 @@ function BingoComponent(): JSX.Element {
   return (
     <div className="w-full max-w-md mx-auto text-center border p-4 rounded-2xl shadow-lg">
       <div className="mb-4">
-        <h2 className="text-2xl font-bold mb-4">BINGO Image Game</h2>
+        <h2 className="text-2xl font-bold mb-4">BINGO</h2>
         <div className="flex justify-center space-x-4 mb-4">
           <button
             onClick={selectRandomImage}
             disabled={availableImages.length === 0}
             className="px-4 py-2 bg-blue-500 text-white rounded-lg disabled:bg-gray-400"
           >
-            BINGO!
+            ROLL!
           </button>
           <button
             onClick={resetGame}
