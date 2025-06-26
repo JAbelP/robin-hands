@@ -133,7 +133,7 @@ function TimerComponent() {
       <div className="text-6xl font-bold mb-4">{formatTime(timeLeft)}</div>
       <div className="flex justify-center space-x-4">
         <button onClick={() => setIsRunning(!isRunning)} className={`${showSettings ? 'px-4 py-2' : 'p-2'} bg-blue-500 text-white rounded-full`}>
-          {showSettings ? 'Start Timer' : (isRunning ? <Pause /> : <Play />)}
+          {(isRunning ? <Pause /> : <Play />)}
         </button>
         <button onClick={reset} className={`${showSettings ? 'px-4 py-2' : 'p-2'} bg-red-500 text-white rounded-full`}>
           {showSettings ? 'Set Timer' : <RotateCcw />}
